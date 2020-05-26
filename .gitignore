@@ -1,0 +1,9 @@
+.env
+*.json
+*.db
+*.db-journal
+__pycache__
+.python-version
+.vscode
+*.pyc
+.DS_Store
