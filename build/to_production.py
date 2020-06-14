@@ -86,6 +86,7 @@ def insert_groups(sqlite_path, engine, lower: int, upper: int):
             on groups.artist_id = artists.artist_id
         where groups.group_id >= ?
         and groups.group_id < ?
+        and groups.snatch_count >= 15
         """
         sqlite_res = sqlite_conn.execute(sql, (lower, upper)).fetchall()
 
