@@ -1,16 +1,18 @@
-"""Get user snatches from the RED API.
+"""Get user snatches from the API.
 
 This program checks for data for all user IDs in a range, in order. It saves to a file 
-and prints out a progress bar. It requires that you export an env variable, 
-REDACTED_API_KEY, with your api key.
+and prints out a progress bar. 
+
+It requires that you export an env variable, API_KEY, with your api key. Also a 
+variable, API_URL, with the url to the API.
 
 Use like:
 
-$ python -m user_snatches 1 100 users.json
+$ python -m build.user_snatches 1 100 users.json
 
 That invocation would grab the data for all users with IDs between 1 and 100 
 (inclusive), then save to the specified file. The file will have one JSON payload per 
-line, containing the user snatch info from RED.
+line.
 """
 import argparse
 import json
@@ -23,8 +25,8 @@ from pathlib import Path
 import requests
 import tqdm
 
-BASE_URL = "https://redacted.ch/ajax.php"
-API_KEY = os.environ["REDACTED_API_KEY"]
+API_URL = os.environ["API_URL"]
+API_KEY = os.environ["API_KEY"]
 TIMEOUT_SECONDS = 2.0
 GET_ATTEMPTS = 100
 
@@ -38,7 +40,7 @@ def get_user_snatches(user_id: int):
 
     def f():
         r = requests.get(
-            BASE_URL,
+            API_URL,
             params=dict(
                 action="user_torrents", id=user_id, type="snatched", limit=10000000000
             ),

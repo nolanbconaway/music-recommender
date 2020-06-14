@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if search_results is defined and search_results | length == 0 %}
+
+<p>There were no results for your query. Sorry friend!</p>
+
+{% endif %}
+
+{% if search_results is defined  and search_results | length > 0 %}
+
+<hr>
+
+<h2>Search Results</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Artist</th>
+            <th scope="col">Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in search_results %}
+        <tr>
+            <td>{{result['artist_name']}}</td>
+            <td>
+                <a href="{{url_for('routes.show_recs', group_id=result['group_id'])}}">
+                    {{result['name']}}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %} {% endblock %}

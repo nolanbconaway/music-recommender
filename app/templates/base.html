@@ -1,0 +1,64 @@
+<!doctype html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+    {% endfor %}
+
+    <h1>Nolan's music recommender!</h1>
+
+    <p>
+        I used the API of a popular music website to scrape the listening behavior of
+        its users. These data tell me which albums each user listened to. I used those
+        data to build a recommendation system!
+    </p>
+
+    <p>
+        These recommendations were built using the
+        <a href='https://en.wikipedia.org/wiki/Apriori_algorithm'>Apriori algorithm</a>
+        for item recommendation. The data for the model was collected in mid-May 2020.
+        This algorithm is vulnerable to the
+        <a href='https://en.wikipedia.org/wiki/Cold_start_(recommender_systems)'>cold start problem</a>,
+        so it will have poor results for albums released very close to when I scraped the data.
+    </p>
+
+    <p>
+        You can search for music below. The search runs on a MySQL database which is
+        <b>NOT</b> a search engine. I wrote a <code>MATCH (...) AGAINST (...)</code> hack
+        and it is not very good. Sorry.
+    </p>
+
+    <form action="{{url_for('routes.search_form')}}" method="get">
+        <div class="form-group">
+            <input type="text" class="form-control" id="q" name='q' placeholder="Search">
+
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+
+    <hr>
+
+    {% block content %}{% endblock %}
+
+    <style>
+        body {
+            max-width: 1000px;
+            padding: 1em;
+        }
+
+    </style>
+</body>

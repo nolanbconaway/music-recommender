@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Recommendations for "{{group['name']}}" by "{{group['artist_name']}}"</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Artist</th>
+            <th scope="col">Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in recs %}
+        <tr>
+            <td>{{result['artist_name']}}</td>
+            <td>
+                <a href="{{url_for('routes.show_recs', group_id=result['group_id'])}}">
+                    {{result['name']}}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

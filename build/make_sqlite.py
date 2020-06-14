@@ -5,18 +5,17 @@ up for ease of access.
 
 Use like:
 
-$ python -m make_sqlite data.json data.db
+$ python -m build.make_sqlite data.json data.db
 
 Later, find your nicely formatted SQLite in data.db.
 """
 import argparse
+import html
 import json
 import sqlite3
 import sys
-import typing
 from pathlib import Path
 
-import requests
 import tqdm
 
 
@@ -83,8 +82,12 @@ def process_line(db_path: Path, line: str) -> None:
         return
 
     # get tuples needed for SQL inserts.
-    artist_tuples = set([(i["artistId"], i["artistName"]) for i in snatches])
-    group_tuples = set([(i["groupId"], i["artistId"], i["name"]) for i in snatches])
+    artist_tuples = set(
+        [(i["artistId"], html.unescape(i["artistName"])) for i in snatches]
+    )
+    group_tuples = set(
+        [(i["groupId"], i["artistId"], html.unescape(i["name"])) for i in snatches]
+    )
     snatch_tuples = set([(user_id, i["groupId"]) for i in snatches])
     user_tuple = (user_id, len(group_tuples))
 
