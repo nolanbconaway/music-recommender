@@ -89,7 +89,7 @@ select
     consequent_id as recommendation_id,
     rn as recommendation_number
 from ranked
-where rn <= 5
+where rn <= 10
 """
 
 

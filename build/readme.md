@@ -6,6 +6,7 @@ This directory contains a python module with tools to build the production datas
 2. `make_sqlite.py`. Build a temporary sqlite database off the JSON data from the previous step. This takes just a few minutes.
 3. `make_recommendations.py`. Add a recommendations mapping table to the temporary sqlite database from the previous step. This is split out as a separate step because it takes several hours.
 4. `to_production.py`. Export data from the sqlite database to a production MySQL database. This should take no more than a few minutes.
+5. `make_minified_recs.py`. An extra which makes a gzipped JSON payload of each groups recommendations, without any data enrichments. Suitable for a lambda-style environment.
 
 All the above scripts are built with a CLI, so from the parent directory of this repository you can call them like
 

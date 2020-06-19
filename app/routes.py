@@ -22,6 +22,24 @@ def search(query: str) -> typing.Iterable[dict]:
     ]
 
 
+def recommendations(group_id: int) -> typing.Iterable[dict]:
+    """Query the db for recommendations."""
+    group = Groups.query.get(group_id)
+    return [g.recommendation_group_id for g in group.recommendations]
+
+
+def enrich_groups(*group_ids: typing.Iterable[int]) -> typing.Iterable[dict]:
+    """Enrich group IDs with metadata from the db."""
+    groups = [Groups.query.get(g) for g in group_ids]
+    result = [
+        dict(group_id=g.group_id, name=g.name, artist_name=g.artist_name,)
+        for g in groups
+    ]
+    if len(result) == 1:
+        return result[0]
+    return result
+
+
 @bp.route("/")
 def search_form():
     """Present a search form and handle results."""
@@ -31,21 +49,17 @@ def search_form():
     return render_template("search.html", search_results=search(query))
 
 
-def recommendations(group_id) -> typing.Iterable[dict]:
-    """Query the db for recommendations."""
-
-
 @bp.route("/recs/<int:group_id>")
-def show_recs(group_id):
+def show_recs(group_id: int):
     """Show the recommendations given a group id."""
-    group = Groups.query.get(group_id)
-    recommended_groups = [g.recommended_group for g in group.recommendations]
-
     return render_template(
         "recs.html",
-        group=dict(name=group.name, artist_name=group.artist_name),
-        recs=[
-            dict(group_id=g.group_id, name=g.name, artist_name=g.artist_name,)
-            for g in recommended_groups
-        ],
+        group=enrich_groups(group_id),
+        recs=enrich_groups(*recommendations(group_id)),
     )
+
+
+@bp.route("/api/recs/<int:group_id>")
+def recs_api(group_id: int):
+    """Provide an API for recommendations."""
+    return jsonify(dict(antecedent=group_id, consequents=recommendations(group_id)))
