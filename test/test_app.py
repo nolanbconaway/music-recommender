@@ -100,3 +100,13 @@ def test_recs_api(client, monkeypatch):
     rv = client.get("/api/recs", query_string="group_id=1")
 
     assert json.loads(rv.data.decode()) == expected
+
+
+def test_recs_api_no_results(client, monkeypatch):
+    """Test api with mocked recommendation results."""
+    monkeypatch.setattr(routes, "recommendations", lambda *x: [])
+
+    rv = client.get("/api/recs", query_string="group_id=1")
+    result = json.loads(rv.data.decode())
+
+    assert not result["success"]
