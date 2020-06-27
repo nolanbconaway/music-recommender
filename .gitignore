@@ -9,3 +9,7 @@ __pycache__
 .DS_Store
 *.egg-info
 *.gz
+whoosh_index/
+.pytest_cache/
+.tox/
+*.tar.gz
