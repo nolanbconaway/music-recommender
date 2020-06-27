@@ -42,6 +42,38 @@ def test_search(client, monkeypatch):
     assert b"Group 1 Title" in rv.data
 
 
+def test_search_single_result(client, monkeypatch):
+    """Test page with mocked search results.
+    
+    Testing case of only one result, there was an uncaught error previously.
+    """
+    monkeypatch.setattr(routes, "search", lambda *x: [1])
+    monkeypatch.setattr(
+        routes,
+        "enrich_groups",
+        lambda *x: dict(group_id=1, name="Group 1 Title", artist_name="Group One"),
+    )
+
+    rv = client.get("/", query_string="q=something")
+    assert b"Search Results" in rv.data
+    assert b"Group One" in rv.data
+    assert b"Group 1 Title" in rv.data
+
+
+def test_search_no_results(client, monkeypatch):
+    """Test page with mocked search results.
+    
+    Testing case of no results, as special handlers are needed.
+    """
+    monkeypatch.setattr(routes, "search", lambda *x: [])
+    monkeypatch.setattr(
+        routes, "enrich_groups", lambda *x: [],
+    )
+
+    rv = client.get("/", query_string="q=something")
+    assert b"Search Results" not in rv.data
+
+
 def test_recs(client, monkeypatch):
     """Test page with mocked recommendation results."""
     monkeypatch.setattr(routes, "recommendations", lambda *x: [1])

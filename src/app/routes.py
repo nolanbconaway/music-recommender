@@ -54,7 +54,10 @@ def search_form():
     query = request.args.get("q", None)
     if query is None or not query:
         return render_template("search.html")
-    return render_template("search.html", search_results=enrich_groups(*search(query)))
+    result = enrich_groups(*search(query))
+    return render_template(
+        "search.html", search_results=[result] if isinstance(result, dict) else result
+    )
 
 
 @bp.route("/recs/<int:group_id>")
