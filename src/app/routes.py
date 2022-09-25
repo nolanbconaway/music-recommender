@@ -67,14 +67,16 @@ def show_recs(group_id: int):
     if not recs:
         return f"No recommendations found for group {group_id}", 404
     return render_template(
-        "recs.html", group=enrich_groups(group_id), recs=enrich_groups(*recs),
+        "recs.html",
+        group=enrich_groups(group_id),
+        recs=enrich_groups(*recs),
     )
 
 
 @bp.route("/api/recs")
 def recs_api():
     """Provide an API for recommendations.
-        
+
     Pass in a single url param: group_id=<integer>. Get the enriched recommendations.
     That's all.
     """

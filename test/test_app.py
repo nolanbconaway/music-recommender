@@ -33,7 +33,9 @@ def test_search(client, monkeypatch):
     monkeypatch.setattr(
         routes,
         "enrich_groups",
-        lambda *x: [dict(group_id=1, name="Group 1 Title", artist_name="Group One"),],
+        lambda *x: [
+            dict(group_id=1, name="Group 1 Title", artist_name="Group One"),
+        ],
     )
 
     rv = client.get("/", query_string="q=something")
@@ -44,7 +46,7 @@ def test_search(client, monkeypatch):
 
 def test_search_single_result(client, monkeypatch):
     """Test page with mocked search results.
-    
+
     Testing case of only one result, there was an uncaught error previously.
     """
     monkeypatch.setattr(routes, "search", lambda *x: [1])
@@ -62,12 +64,14 @@ def test_search_single_result(client, monkeypatch):
 
 def test_search_no_results(client, monkeypatch):
     """Test page with mocked search results.
-    
+
     Testing case of no results, as special handlers are needed.
     """
     monkeypatch.setattr(routes, "search", lambda *x: [])
     monkeypatch.setattr(
-        routes, "enrich_groups", lambda *x: [],
+        routes,
+        "enrich_groups",
+        lambda *x: [],
     )
 
     rv = client.get("/", query_string="q=something")
@@ -80,7 +84,9 @@ def test_recs(client, monkeypatch):
     monkeypatch.setattr(
         routes,
         "enrich_groups",
-        lambda *x: [dict(group_id=1, name="Group 1 Title", artist_name="Group One"),],
+        lambda *x: [
+            dict(group_id=1, name="Group 1 Title", artist_name="Group One"),
+        ],
     )
 
     rv = client.get("/recs/1")
@@ -93,10 +99,16 @@ def test_recs_api(client, monkeypatch):
     """Test api with mocked recommendation results."""
     monkeypatch.setattr(routes, "recommendations", lambda *x: [1])
     monkeypatch.setattr(
-        routes, "enrich_groups", lambda *x: "VALUE",
+        routes,
+        "enrich_groups",
+        lambda *x: "VALUE",
     )
 
-    expected = dict(antecedent="VALUE", consequents="VALUE", success=True,)
+    expected = dict(
+        antecedent="VALUE",
+        consequents="VALUE",
+        success=True,
+    )
     rv = client.get("/api/recs", query_string="group_id=1")
 
     assert json.loads(rv.data.decode()) == expected
