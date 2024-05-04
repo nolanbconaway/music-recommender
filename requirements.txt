@@ -3,6 +3,6 @@ Flask-Limiter==2.6.3
 gevent==23.9.1
 python-dotenv==0.21.0
 requests==2.31.0
-tqdm==4.64.1
+tqdm==4.66.3
 Whoosh==2.7.4
 -e .
