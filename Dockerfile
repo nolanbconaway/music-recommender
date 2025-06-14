@@ -3,7 +3,8 @@ FROM python:3.8
 ARG REMOTE_INDEX_AT
 ENV REMOTE_INDEX_AT=${REMOTE_INDEX_AT}
 
-RUN curl -s $REMOTE_INDEX_AT | tar -xz > whoosh_index
+RUN mkdir whoosh_index
+RUN curl -s $REMOTE_INDEX_AT | tar -xJ -C whoosh_index --strip-components=1
 
 COPY requirements.txt requirements.txt
 COPY src src
