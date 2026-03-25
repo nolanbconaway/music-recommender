@@ -13,3 +13,4 @@ whoosh_index/
 .pytest_cache/
 .tox/
 *.tar.gz
+*.tar.xz
